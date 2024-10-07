@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql
+    container_name: some-mysql
+    environment:
+      MYSQL_DATABASE: drupal
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - some-network
+    ports:  # Exponer el puerto de MySQL al host
+      - "3306:3306"  # El puerto 3306 es el puerto por defecto de MySQL
+    restart: always  # Opcional, reinicia el contenedor automáticamente si se detiene
+
+  drupal:
+    build: .
+    container_name: some-drupal
+    ports:
+      - "8080:80"
+    networks:
+      - some-network
+    #volumes:
+    #  - /path/on/host/modules:/var/www/html/modules
+    #  - /path/on/host/profiles:/var/www/html/profiles
+    #  - /path/on/host/sites:/var/www/html/sites
+    #  - /path/on/host/themes:/var/www/html/themes
+    restart: always  # Opcional
+
+networks:
+  some-network:
+    driver: bridge
